@@ -661,6 +661,28 @@ details.dialog > [role='document'] {
     /* overflow-y: scroll; */
 }
 
+.errorMessage {
+    --text-opacity: 1;
+    color: #f56565;
+    color: rgba(245, 101, 101, var(--text-opacity));
+    /* padding-left: 0.5rem; */
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+button:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+button:disabled:hover {
+    cursor: not-allowed;
+}
+
+.modal-opened {
+    overflow: hidden;
+}
+
 .formField {
     appearance: none;
     display: block;

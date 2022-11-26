@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useAuth } from '../hooks/useAuth'
 import { useForm } from '../hooks/useForm'
 import { RE_EMAIL } from '../utils'
 import { Modal } from './Modal'
@@ -18,6 +19,7 @@ const stateScheme = {
 }
 
 function LoginModal() {
+    const { login } = useAuth()
     const {
         values,
         errors,
@@ -25,7 +27,7 @@ function LoginModal() {
         handleOnBlur,
         fieldDirty,
         formDisabled,
-    } = useForm(stateScheme)
+    } = useForm(stateScheme, login)
 
     return (
         <Modal title='Вход в аккаунт' buttonText='Вход'>

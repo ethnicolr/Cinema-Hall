@@ -1,9 +1,10 @@
+import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 import { get_prop } from '../utils'
 
 interface FieldType {
     required: boolean
-    compareField?: keyof T
+    compareField?: string
     validator?: {
         func: (value: string) => boolean
         error: string
@@ -12,12 +13,25 @@ interface FieldType {
 
 type StateSheme = Record<string, FieldType>
 
-function useForm<T extends StateSheme, K extends keyof T>(stateScheme: T<K>) {
+function useForm<T extends StateSheme, K extends keyof T>(
+    stateScheme: T,
+    onSubmit: (...agrs: any) => void
+) {
     const [values, setValues] = useState(get_prop(stateScheme))
     const [errors, setErrors] = useState(get_prop(stateScheme))
     const [fieldDirty, setFieldDirty] = useState(get_prop(stateScheme))
     const [formDirty, setFormDirty] = useState(false)
     const [formDisabled, setDisabled] = useState(true)
+    const { data } = useQuery({
+        queryKey: ['posts'],
+        queryFn: async () => {
+            const response = await fetch(
+                'https://jsonplaceholder.typicode.com/posts'
+            )
+            const data = await response.json()
+            return data
+        },
+    })
 
     useEffect(() => {
         if (formDirty) {
@@ -30,13 +44,13 @@ function useForm<T extends StateSheme, K extends keyof T>(stateScheme: T<K>) {
 
     const validateValue = (name: K, value: string) => {
         const field = stateScheme[name]
-        const compareField = values[field.compareField]
+        // const compareField = values[field.compareField]
 
         let error
         if (!value && field.required) {
             error = 'Поле обязательное'
         }
-        if (field.validator?.func(value, compareField)) {
+        if (field.validator?.func(value)) {
             error = field.validator.error
         }
         return error

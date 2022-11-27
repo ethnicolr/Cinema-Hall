@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useForm } from '../hooks/useForm'
 import { RE_EMAIL } from '../utils'
@@ -19,19 +19,33 @@ const stateScheme = {
 }
 
 function LoginModal() {
-    const { login } = useAuth()
+    const { login, error: errorSubmit, isSuccess, reset } = useAuth()
     const {
         values,
-        errors,
+        errors: errorsFields,
         handleChange,
         handleOnBlur,
         fieldDirty,
         formDisabled,
+        handleOnSubmit,
+        clearForm,
     } = useForm(stateScheme, login)
 
+    useEffect(() => {
+        if (isSuccess) {
+            clearForm()
+        }
+    }, [isSuccess])
+
+    // useEffect(() => {
+    //     if (errorSubmit) {
+    //         reset()
+    //     }
+    // }, [errorSubmit, values])
+
     return (
-        <Modal title='Вход в аккаунт' buttonText='Вход'>
-            <form noValidate name='login'>
+        <Modal title='Вход в аккаунт' buttonText='Вход' closeEvent={clearForm}>
+            <form noValidate name='login' onSubmit={handleOnSubmit}>
                 <div className='mt-2 rounded-md'>
                     <input
                         aria-label='Email address'
@@ -43,8 +57,10 @@ function LoginModal() {
                         onBlur={handleOnBlur}
                         value={values.email}
                     />
-                    {errors.email && fieldDirty.email && (
-                        <span className='errorMessage'>{errors.email}</span>
+                    {errorsFields.email && fieldDirty.email && (
+                        <span className='errorMessage'>
+                            {errorsFields.email}
+                        </span>
                     )}
                 </div>
                 <div className='mt-2 rounded-md'>
@@ -58,12 +74,18 @@ function LoginModal() {
                         onBlur={handleOnBlur}
                         value={values.password}
                     />
-                    {errors.password && fieldDirty.password && (
-                        <span className='errorMessage'>{errors.password}</span>
+                    {errorsFields.password && fieldDirty.password && (
+                        <span className='errorMessage'>
+                            {errorsFields.password}
+                        </span>
                     )}
                 </div>
                 <div className='mt-6 text-center'>
-                    <span className='errorMessage serverError'></span>
+                    {errorSubmit && (
+                        <span className='errorMessage serverError'>
+                            {errorSubmit}
+                        </span>
+                    )}
                     <button
                         type='submit'
                         className='mt-4 submitButton'

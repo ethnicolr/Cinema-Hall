@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 import { get_prop } from '../utils'
 
@@ -22,16 +21,6 @@ function useForm<T extends StateSheme, K extends keyof T>(
     const [fieldDirty, setFieldDirty] = useState(get_prop(stateScheme))
     const [formDirty, setFormDirty] = useState(false)
     const [formDisabled, setDisabled] = useState(true)
-    const { data } = useQuery({
-        queryKey: ['posts'],
-        queryFn: async () => {
-            const response = await fetch(
-                'https://jsonplaceholder.typicode.com/posts'
-            )
-            const data = await response.json()
-            return data
-        },
-    })
 
     useEffect(() => {
         if (formDirty) {
@@ -71,14 +60,26 @@ function useForm<T extends StateSheme, K extends keyof T>(
         setFieldDirty((prevState) => ({ ...prevState, [field]: true }))
     }
 
+    const clearForm = () => {
+        setValues(get_prop(stateScheme))
+        setErrors(get_prop(stateScheme))
+    }
+
+    const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        onSubmit(values)
+    }
+
     return {
         values,
         errors,
         formDirty,
         handleChange,
         handleOnBlur,
+        handleOnSubmit,
         fieldDirty,
         formDisabled,
+        clearForm,
     }
 }
 

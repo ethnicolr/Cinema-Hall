@@ -19,16 +19,24 @@ interface Account {
     password: string
 }
 
+interface Request {
+    data?: object
+    token?: string
+}
+
 function getToken() {
     return window.localStorage.getItem(localStorageKey)
 }
 
-function client(endpoint: string, body: object): Promise<UserResponse> {
+function client(
+    endpoint: string,
+    { data }: Request = {}
+): Promise<UserResponse> {
     const token = getToken()
-
+    console.log(data)
     const config = {
-        method: body ? 'POST' : 'GET',
-        body: JSON.stringify(body),
+        method: data ? 'POST' : 'GET',
+        body: JSON.stringify(data),
         headers: {
             Authorization: token ? `Bearer ${token}` : '',
             'Content-Type': 'application/json',
@@ -50,14 +58,14 @@ function handleUserResponse(user: UserResponse) {
 }
 
 function login(form: Account): Promise<UserResponse> {
-    return client('login', { data: form }).then(handleUserResponse)
+    return client('auth/login', { data: form }).then(handleUserResponse)
 }
 function register(form: Account): Promise<UserResponse> {
-    return client('register', { data: form })
+    return client('auth/register', { data: form })
 }
 
 function logout() {
     window.localStorage.removeItem(localStorageKey)
 }
 
-export { login, register, logout, UserResponse, Account }
+export { login, register, logout, UserResponse, Account, getToken, client }

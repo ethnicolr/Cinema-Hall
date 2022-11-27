@@ -42,14 +42,14 @@ const stateScheme = {
 }
 
 function RegisterModal() {
-    const {
-        values,
-        errors,
-        handleChange,
-        handleOnBlur,
-        fieldDirty,
-        formDisabled,
-    } = useForm(stateScheme)
+    // const {
+    //     values,
+    //     errors,
+    //     handleChange,
+    //     handleOnBlur,
+    //     fieldDirty,
+    //     formDisabled,
+    // } = useForm(stateScheme)
     return (
         <Modal title='Регистрация в системе' buttonText='Регистрация'>
             <form name='registration' action='#' method='POST' noValidate>

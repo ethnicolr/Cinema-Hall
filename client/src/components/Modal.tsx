@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react'
+import { useAuth } from '../hooks/useAuth'
 
 interface Props {
     buttonText: string
     title: string
+    closeEvent?: () => void
     children?: React.ReactNode
 }
 
-function Modal({ buttonText, title, children }: Props) {
+function Modal({ buttonText, title, children, closeEvent }: Props) {
+    const { isSuccess, error: errorSubmit, reset } = useAuth()
     const [isOpen, setOpen] = useState(false)
 
     const toggleModal = (
         e: React.MouseEvent<HTMLDetailsElement, MouseEvent>
     ) => {
-        e.preventDefault()
         const element = (e.target as HTMLElement).tagName
         if (element === 'SUMMARY' || element === 'svg') {
+            e.preventDefault()
             setOpen((open) => !open)
         }
     }
@@ -31,7 +34,20 @@ function Modal({ buttonText, title, children }: Props) {
         return () => {
             document.removeEventListener('keyup', handleKeyUp)
         }
-    }, [])
+    }, [errorSubmit])
+
+    useEffect(() => {
+        if (isSuccess) {
+            setOpen(false)
+        }
+    }, [isSuccess])
+
+    useEffect(() => {
+        if (!isOpen) {
+            if (errorSubmit) reset()
+            if (closeEvent) closeEvent()
+        }
+    }, [isOpen])
 
     return (
         <div>

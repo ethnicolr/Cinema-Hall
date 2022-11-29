@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useForm } from '../hooks/useForm'
+import { useModal } from '../hooks/useModal'
 import { RE_EMAIL } from '../utils'
-import { Modal } from './Modal'
+import { LoginForm } from './LoginForm'
+import { ModalWrapper } from './ModalWrapper'
 
 const stateScheme = {
     email: {
         required: true,
         validator: {
-            func: (value: string, compareField?: string) =>
-                !RE_EMAIL.test(value),
+            func: (value: string) => !RE_EMAIL.test(value),
             error: 'Некорректный email',
         },
     },
@@ -19,83 +20,57 @@ const stateScheme = {
 }
 
 function LoginModal() {
-    const { login, error: errorSubmit, isSuccess, reset } = useAuth()
-    const {
-        values,
-        errors: errorsFields,
-        handleChange,
-        handleOnBlur,
-        fieldDirty,
-        formDisabled,
-        handleOnSubmit,
-        clearForm,
-    } = useForm(stateScheme, login)
+    const { login } = useAuth()
+    const { loginOpen, setLoginOpen, setResetPasswordOpen } = useModal()
 
-    useEffect(() => {
-        if (isSuccess) {
-            clearForm()
+    const handleSubmit = async (
+        values: Record<keyof typeof stateScheme, string>
+    ) => {
+        const response = login(values)
+        if (typeof response !== 'string') {
+            setLoginOpen(false)
         }
-    }, [isSuccess])
+        return response
+    }
 
-    // useEffect(() => {
-    //     if (errorSubmit) {
-    //         reset()
-    //     }
-    // }, [errorSubmit, values])
+    const redirectModal = (
+        e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    ) => {
+        e.preventDefault()
+        setResetPasswordOpen(true)
+        setLoginOpen(false)
+    }
 
     return (
-        <Modal title='Вход в аккаунт' buttonText='Вход' closeEvent={clearForm}>
-            <form noValidate name='login' onSubmit={handleOnSubmit}>
-                <div className='mt-2 rounded-md'>
-                    <input
-                        aria-label='Email address'
-                        name='email'
-                        type='email'
-                        className='formField'
-                        placeholder='e-mail'
-                        onChange={handleChange}
-                        onBlur={handleOnBlur}
-                        value={values.email}
-                    />
-                    {errorsFields.email && fieldDirty.email && (
-                        <span className='errorMessage'>
-                            {errorsFields.email}
-                        </span>
-                    )}
-                </div>
-                <div className='mt-2 rounded-md'>
-                    <input
-                        aria-label='Password'
-                        name='password'
-                        type='password'
-                        className='formField'
-                        placeholder='пароль'
-                        onChange={handleChange}
-                        onBlur={handleOnBlur}
-                        value={values.password}
-                    />
-                    {errorsFields.password && fieldDirty.password && (
-                        <span className='errorMessage'>
-                            {errorsFields.password}
-                        </span>
-                    )}
-                </div>
-                <div className='mt-6 text-center'>
-                    {errorSubmit && (
-                        <span className='errorMessage serverError'>
-                            {errorSubmit}
-                        </span>
-                    )}
-                    <button
-                        type='submit'
-                        className='mt-4 submitButton'
-                        disabled={formDisabled}
+        <ModalWrapper
+            title='Вход в аккаунт'
+            buttonText='Вход'
+            toggleModal={setLoginOpen}
+            isOpen={loginOpen}
+        >
+            <div className='max-w-lg p-6 w-full'>
+                <div className='text-center'>
+                    <a href='./index.html'>
+                        <img
+                            className='h-24 w-auto inline-block'
+                            src='../assets/img/g12.png'
+                        />
+                    </a>
+                    <h2 className='mt-6 text-center text-base md:text-2xl leading-9 font-extrabold text-gray-900'>
+                        Вход в аккаунт
+                    </h2>
+                    <a
+                        role='button'
+                        id='forgotPasswordButton'
+                        className='hover:underline text-active text-base'
+                        onClick={redirectModal}
                     >
-                        Вход
-                    </button>
+                        Забыли пароль?
+                    </a>
                 </div>
-            </form>
-        </Modal>
+                <LoginForm onSubmit={handleSubmit} />
+            </div>
+        </ModalWrapper>
     )
 }
 

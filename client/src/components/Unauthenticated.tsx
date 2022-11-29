@@ -1,6 +1,8 @@
 import React from 'react'
 import { LoginModal } from './LoginModal'
 import { RegisterModal } from './RegisterModal'
+import { RestorePasswordModal } from './RestorePasswordModal'
+import { ResetPasswordModal } from './ResetPasswordModal'
 
 function Unauthenticated() {
     return (
@@ -8,6 +10,8 @@ function Unauthenticated() {
             <LoginModal />
             |
             <RegisterModal />
+            <RestorePasswordModal />
+            <ResetPasswordModal />
         </div>
     )
 }

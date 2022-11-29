@@ -3,9 +3,9 @@ import { useAsync } from '../hooks/useAsync'
 import * as auth from './../auth-provider'
 
 interface AuthContextInterface {
-    account: auth.UserResponse | null
-    login: (form: auth.Account) => void
-    register: (form: auth.Account) => void
+    data: auth.UserResponse | null
+    login: (form: auth.Account) => Promise<string | auth.UserResponse>
+    register: (form: auth.Account) => Promise<string | auth.UserResponse>
     logout: () => void
     reset: () => void
     isIdle: boolean
@@ -35,7 +35,7 @@ async function bootstrapAppData() {
 
 function AuthProvider({ children }: Props) {
     const {
-        data: account,
+        data,
         run,
         reset,
         isIdle,
@@ -60,7 +60,7 @@ function AuthProvider({ children }: Props) {
     }
 
     const value = {
-        account,
+        data,
         register,
         login,
         logout,

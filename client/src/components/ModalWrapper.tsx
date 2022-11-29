@@ -2,23 +2,30 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 
 interface Props {
-    buttonText: string
-    title: string
-    closeEvent?: () => void
+    buttonText?: string
+    title?: string
+    isOpen: boolean
+    toggleModal: React.Dispatch<React.SetStateAction<boolean>>
     children?: React.ReactNode
 }
 
-function Modal({ buttonText, title, children, closeEvent }: Props) {
+function ModalWrapper({
+    buttonText,
+    title,
+    toggleModal,
+    isOpen,
+    children,
+}: Props) {
     const { isSuccess, error: errorSubmit, reset } = useAuth()
-    const [isOpen, setOpen] = useState(false)
 
-    const toggleModal = (
+    const handleClick = (
         e: React.MouseEvent<HTMLDetailsElement, MouseEvent>
     ) => {
         const element = (e.target as HTMLElement).tagName
         if (element === 'SUMMARY' || element === 'svg') {
             e.preventDefault()
-            setOpen((open) => !open)
+            console.log('click')
+            toggleModal((open) => !open)
         }
     }
 
@@ -27,7 +34,7 @@ function Modal({ buttonText, title, children, closeEvent }: Props) {
             const { key } = e
             if (key === 'Escape') {
                 e.preventDefault()
-                setOpen(false)
+                toggleModal(false)
             }
         }
         document.addEventListener('keyup', handleKeyUp)
@@ -38,14 +45,13 @@ function Modal({ buttonText, title, children, closeEvent }: Props) {
 
     useEffect(() => {
         if (isSuccess) {
-            setOpen(false)
+            toggleModal(false)
         }
     }, [isSuccess])
 
     useEffect(() => {
         if (!isOpen) {
             if (errorSubmit) reset()
-            if (closeEvent) closeEvent()
         }
     }, [isOpen])
 
@@ -54,7 +60,7 @@ function Modal({ buttonText, title, children, closeEvent }: Props) {
             <details
                 className='dialog registration'
                 open={isOpen}
-                onClick={toggleModal}
+                onClick={handleClick}
             >
                 <summary
                     role='button'
@@ -89,20 +95,7 @@ function Modal({ buttonText, title, children, closeEvent }: Props) {
                         </button>
                     </div>
                     <div className='flex w-full items-center justify-center'>
-                        <div className='max-w-lg p-6 w-full'>
-                            <div className='text-center'>
-                                <a href='./index.html'>
-                                    <img
-                                        className='h-24 w-auto inline-block'
-                                        src='../assets/img/g12.png'
-                                    />
-                                </a>
-                                <h2 className='mt-6 text-center text-base md:text-2xl leading-9 font-extrabold text-gray-900'>
-                                    {title}
-                                </h2>
-                            </div>
-                            {children}
-                        </div>
+                        {isOpen && children}
                     </div>
                 </div>
             </details>
@@ -110,4 +103,4 @@ function Modal({ buttonText, title, children, closeEvent }: Props) {
     )
 }
 
-export { Modal }
+export { ModalWrapper }

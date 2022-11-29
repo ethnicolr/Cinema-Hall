@@ -32,7 +32,7 @@ function useAsync<T>(initialState?: T) {
             )
         }
 
-        promise
+        return promise
             .then((data) => {
                 dispatch({ status: 'resolved', data, error: null })
                 return data
@@ -43,6 +43,7 @@ function useAsync<T>(initialState?: T) {
                         ? error.toString()
                         : error
                 dispatch({ status: 'rejected', error: errorMessage as string })
+                return errorMessage
             })
     }, [])
     return {

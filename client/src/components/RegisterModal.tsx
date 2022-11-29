@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from '../hooks/useForm'
+import React from 'react'
+import { useAuth } from '../hooks/useAuth'
+import { useModal } from '../hooks/useModal'
 import { RE_EMAIL } from '../utils'
-import { Modal } from './Modal'
+import { ModalWrapper } from './ModalWrapper'
+import { RegisterForm } from './RegisterForm'
 
 const stateScheme = {
     email: {
@@ -29,8 +31,10 @@ const stateScheme = {
         required: true,
         compareField: 'password',
         validator: {
-            func(value: string, compare?: string | null) {
+            func(value: string, compare?: string) {
                 if (value !== compare) {
+                    console.log('err')
+                    console.log(this.error)
                     this.error = 'Пароли не совпадают'
                     return true
                 }
@@ -42,58 +46,39 @@ const stateScheme = {
 }
 
 function RegisterModal() {
-    // const {
-    //     values,
-    //     errors,
-    //     handleChange,
-    //     handleOnBlur,
-    //     fieldDirty,
-    //     formDisabled,
-    // } = useForm(stateScheme)
+    const { singUpOpen, setSingUpOpen } = useModal()
+    const { register } = useAuth()
+
+    const handleSubmit = async (
+        values: Record<keyof typeof stateScheme, string>
+    ) => {
+        const response = register(values)
+        if (typeof response !== 'string') {
+            setSingUpOpen(false)
+        }
+        return response
+    }
     return (
-        <Modal title='Регистрация в системе' buttonText='Регистрация'>
-            <form name='registration' action='#' method='POST' noValidate>
-                <div className='mt-2 rounded-md'>
-                    <input
-                        aria-label='Email address'
-                        name='email'
-                        type='email'
-                        className='formField'
-                        placeholder='e-mail'
-                    />
-                    <span className='errorMessage'></span>
+        <ModalWrapper
+            toggleModal={setSingUpOpen}
+            isOpen={singUpOpen}
+            buttonText={'Регистрация'}
+        >
+            <div className='max-w-lg p-6 w-full'>
+                <div className='text-center'>
+                    <a href='./index.html'>
+                        <img
+                            className='h-24 w-auto inline-block'
+                            src='../assets/img/g12.png'
+                        />
+                    </a>
+                    <h2 className='mt-6 text-center text-base md:text-2xl leading-9 font-extrabold text-gray-900'>
+                        Регистрация в системе
+                    </h2>
                 </div>
-
-                <div className='mt-2 rounded-md'>
-                    <input
-                        aria-label='Password'
-                        name='password'
-                        type='password'
-                        className='formField'
-                        placeholder='пароль'
-                    />
-                    <span className='errorMessage'></span>
-                </div>
-
-                <div className='mt-2 rounded-md'>
-                    <input
-                        aria-label='Password'
-                        name='passwordRepeat'
-                        type='password'
-                        className='formField'
-                        placeholder='повторите пароль'
-                    />
-                    <span className='errorMessage'></span>
-                </div>
-
-                <div className='mt-6'>
-                    <span className='errorMessage serverError'></span>
-                    <button type='submit' className='submitButton'>
-                        Регистрация
-                    </button>
-                </div>
-            </form>
-        </Modal>
+                <RegisterForm onSubmit={handleSubmit} />
+            </div>
+        </ModalWrapper>
     )
 }
 

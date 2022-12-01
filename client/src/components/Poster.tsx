@@ -1,14 +1,16 @@
 import React from 'react'
 interface Props {
     url: string
+    isHidden: boolean
 }
 
-function Poster({ url }: Props) {
+function Poster({ url, isHidden }: Props) {
     return (
         <li
             className='hero'
             style={{
                 backgroundImage: `url('${url}')`,
+                display: `${isHidden ? 'none' : 'flex'}`,
             }}
         >
             <article className='justify-between flex flex-col md:flex-row items-center bg-transparentBlack p-8 text-white'>

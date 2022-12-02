@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 @Entity()
 export class Movie {
   @PrimaryGeneratedColumn()
-  cinemaId: number;
+  id: number;
 
   @Column()
   name: string;

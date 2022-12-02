@@ -11,8 +11,7 @@ export class CinemaShowService {
   ) {}
 
   async filtetCinemaShow(filter: any) {
-    const shows = await this.cinemaShowRepo.find();
-    console.log(shows);
-    return 'true';
+    const shows = await this.cinemaShowRepo.find({ relations: ['movie'] });
+    return shows;
   }
 }

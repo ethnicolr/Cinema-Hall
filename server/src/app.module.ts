@@ -8,9 +8,16 @@ import { CinemaShowService } from './cinema.show/cinema.show.service';
 import { CinemaShowModule } from './cinema.show/cinema.show.module';
 import { MovieService } from './movie/movie.service';
 import { ModuleService } from './module/module.service';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, DatabaseModule, CinemaShowModule],
+  imports: [
+    AuthModule,
+    UsersModule,
+    DatabaseModule,
+    CinemaShowModule,
+    MovieModule,
+  ],
   controllers: [AuthController],
   providers: [AppService, CinemaShowService, MovieService, ModuleService],
 })

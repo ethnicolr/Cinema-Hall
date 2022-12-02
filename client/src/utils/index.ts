@@ -10,4 +10,13 @@ function get_prop<T extends Record<string, unknown>, K extends keyof T>(
     }, {} as Record<keyof T, ''>)
 }
 
-export { RE_EMAIL, get_prop }
+function getdhm(timestamp: string) {
+    const date = new Date(Date.parse(timestamp))
+    return {
+        day: date.getDate(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+    }
+}
+
+export { RE_EMAIL, get_prop, getdhm }

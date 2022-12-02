@@ -1,20 +1,36 @@
 import React from 'react'
-import { Footer } from './components/Footer'
-import { Header } from './components/Header'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './context/auth-context'
 import { ModalProvider } from './context/modal-context'
+import { Header } from './components/Header'
+import { Footer } from './components/Footer'
 import { Main } from './screens/main'
+import { MoviePage } from './screens/moviePage'
+
+const queryClient = new QueryClient()
 
 export default function App() {
     return (
         <>
-            <ModalProvider>
-                <AuthProvider>
-                    <Header />
-                    <Main />
-                    {/* <Footer /> */}
-                </AuthProvider>
-            </ModalProvider>
+            <HashRouter>
+                <QueryClientProvider client={queryClient}>
+                    <ModalProvider>
+                        <AuthProvider>
+                            <Header />
+                            <Routes>
+                                <Route path='/' element={<Main />} />
+                                <Route
+                                    path='/movie/:id'
+                                    element={<MoviePage />}
+                                />
+                            </Routes>
+
+                            <Footer />
+                        </AuthProvider>
+                    </ModalProvider>
+                </QueryClientProvider>
+            </HashRouter>
         </>
     )
 }

@@ -7,6 +7,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { Main } from './screens/main'
 import { MoviePage } from './screens/moviePage'
+import { Timetable } from './components/Timetable'
 
 const queryClient = new QueryClient()
 
@@ -23,6 +24,10 @@ export default function App() {
                                 <Route
                                     path='/movie/:id'
                                     element={<MoviePage />}
+                                />
+                                <Route
+                                    path='/timetable'
+                                    element={<Timetable />}
                                 />
                             </Routes>
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Navbar() {
     return (
@@ -11,24 +12,24 @@ function Navbar() {
                 </div>
             </button>
             <nav className='flex-row relative top-auto right-auto bottom-auto left-auto p-0 m-0 w-auto'>
-                <a
-                    href='./timetable.html'
+                <Link
+                    to='/timetable'
                     className='text-base leading-6 font-medium  hover:underline transition ease-in-out duration-150 active ml-4 mr-4 mt-2 mb-2'
                 >
                     Расписание
-                </a>
-                <a
-                    href='./films.html'
+                </Link>
+                <Link
+                    to='/films'
                     className='text-base leading-6 font-medium  hover:underline transition ease-in-out duration-150 ml-4 mr-4 mt-2 mb-2'
                 >
                     Фильмы
-                </a>
-                <a
-                    href='#'
+                </Link>
+                <Link
+                    to='#'
                     className='text-base leading-6 font-medium  hover:underline transition ease-in-out duration-150 ml-4 mr-4 mt-2 mb-2'
                 >
                     4DX
-                </a>
+                </Link>
             </nav>
         </>
     )

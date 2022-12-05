@@ -28,12 +28,8 @@ function getToken() {
     return window.localStorage.getItem(localStorageKey)
 }
 
-function client(
-    endpoint: string,
-    { data }: Request = {}
-): Promise<UserResponse> {
+function client(endpoint: string, { data }: Request = {}) {
     const token = getToken()
-    console.log(data)
     const config = {
         method: data ? 'POST' : 'GET',
         body: JSON.stringify(data),

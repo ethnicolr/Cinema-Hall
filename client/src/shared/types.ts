@@ -1,4 +1,4 @@
-interface CinemaShow {
+interface CinemaShowType {
     id: number
     technology: string
     format: string
@@ -6,7 +6,7 @@ interface CinemaShow {
     startTime: string
 }
 
-interface Movie {
+interface MovieType {
     id: number
     name: string
     poster: string
@@ -25,12 +25,23 @@ interface Movie {
     rentalStart: string
 }
 
-interface CinemaShowRespose extends CinemaShow {
-    movie: Movie
+interface CinemaShowRelationType extends CinemaShowType {
+    movie: MovieType
 }
 
-interface MovieResponse extends Movie {
-    cinemaShows: CinemaShow[]
+interface MovieRelationType extends MovieType {
+    cinemaShows: CinemaShowType[]
 }
 
-export { Movie, CinemaShow, CinemaShowRespose, MovieResponse }
+type FormatType = Record<string, CinemaShowType[]>
+type SessionsType = Record<string, FormatType>
+type MovieShowsType = Record<string, SessionsType>
+
+export {
+    CinemaShowType,
+    MovieType,
+    CinemaShowRelationType,
+    MovieRelationType,
+    SessionsType,
+    MovieShowsType,
+}

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Movie } from '../shared/types'
+import { MovieType } from '../shared/types'
 
 interface Props {
-    data: Movie
+    data: MovieType
 }
 
 function MoviePoster({ data }: Props) {

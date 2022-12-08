@@ -1,25 +1,32 @@
-import { useQuery } from '@tanstack/react-query'
 import React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { MovieResponse } from '../shared/types'
 import { Spinner } from '../components/Spinner'
-import { API } from '../constants'
+import { Sessions } from '../components/Sessions'
+import { client } from '../auth-provider'
+import { MovieRelationType, SessionsType } from '../shared/types'
+import { getdhm, groupArray } from '../utils'
 import MovieDetails from '../components/MovieDetails'
-import { MovieSessions } from '../components/MovieSessions'
 
 function MoviePage() {
-    const getMovieData = (id?: string): Promise<MovieResponse> =>
-        fetch(`${API}/movie/${id}`).then((response) => response.json())
+    const fetchMovieData = (id?: string): Promise<MovieRelationType> =>
+        client(`movie/${id}`)
 
     const { id } = useParams()
 
     const { data, isLoading, isSuccess } = useQuery(['movie'], () =>
-        getMovieData(id)
+        fetchMovieData(id)
     )
 
     if (isLoading) return <Spinner />
     if (isSuccess) {
-        const { poster, name, ageRestriction } = data
+        const { poster, name, ageRestriction, cinemaShows } = data
+
+        const group = groupArray(cinemaShows, {}, [
+            (item) => getdhm(item.startTime).movieDate,
+            (item) => item.technology + item.format,
+        ]) as SessionsType
+
         const title = `${name} (${ageRestriction})`
         return (
             <>
@@ -37,7 +44,7 @@ function MoviePage() {
                             </article>
                         </div>
                         <div className='flex p-8 justify-between flex-col lg:flex-row container mx-auto'>
-                            <MovieSessions data={data.cinemaShows} />
+                            <Sessions data={group} />
                             <MovieDetails data={data} />
                         </div>
                     </>

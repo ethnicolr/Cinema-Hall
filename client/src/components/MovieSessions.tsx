@@ -1,76 +1,69 @@
 import React from 'react'
-import { CinemaShow } from '../shared/types'
-import { getdhm } from '../utils'
+import { getdhm, groupArray } from '../utils'
+import { Sessions } from './Sessions'
+import { Spinner } from './Spinner'
+import {
+    CinemaShowRelationType,
+    MovieShowsType,
+    MovieType,
+} from '../shared/types'
 
 interface Props {
-    data: CinemaShow[]
+    data: CinemaShowRelationType[] | null
 }
 
-type Format = Record<string, CinemaShow[]>
-type GroupDaysAndFormat = Record<string, Format>
-
 function MovieSessions({ data }: Props) {
-    const days = {} as GroupDaysAndFormat
+    if (!data) {
+        return <Spinner />
+    } else {
+        const group = groupArray(data, {}, [
+            (item) => item.movie.id.toString(),
+            (item) => getdhm(item['startTime']).movieDate,
+            (item) => `${item.technology} ${item.format}`,
+        ]) as MovieShowsType
 
-    data.forEach((session) => {
-        const { startTime, format, technology } = session
-        const type = `${technology} ${format}`
-        const { day } = getdhm(startTime)
-        if (days[day]) {
-            if (days[day][type]) {
-                days[day][type].push(session)
-            } else {
-                days[day][type] = [session]
-            }
-        } else {
-            days[day] = { [type]: [session] }
-        }
-    })
+        const moviesGroups = data.reduce((obj, item) => {
+            obj[item.movie.id] = item.movie
+            return obj
+        }, {} as Record<string, MovieType>)
 
-    console.log(days)
-    return (
-        <section className='flex-1 lg:mr-8'>
-            <h1 className='text-4xl'>Сеансы</h1>
-            <ul className='filmTimetable focus:outline-none'>
-                {Object.keys(days).map((day) => {
-                    return (
-                        <li className='dailySchedule' key={day}>
-                            <h5 className='text-xl'>{day}</h5>
-                            <ul className='focus:outline-none'>
-                                {Object.keys(days[day]).map((type) => {
-                                    return (
-                                        <li
-                                            className='flex items-start m-2 p-2'
-                                            key={type}
-                                        >
-                                            <h6 className='w-24 flex-shrink-0 mt-2'>
-                                                {type}
-                                                <div className='flex flex-wrap'>
-                                                    {days[day][type].map(
-                                                        (time) => (
-                                                            <a
-                                                                className='movieTimeLink notActive'
-                                                                key={time.id}
-                                                            >
-                                                                {time.startTime}
-                                                            </a>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </h6>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </li>
-                    )
-                })}
-                {/* {data.map((session) => {
-                    return <h1>test</h1>
-                })} */}
-            </ul>
-        </section>
-    )
+        return (
+            <section className='flex flex-col w-full flex-1 overflow-hidden'>
+                <div className='flex flex-col flex-1'>
+                    <div className='pt-2 pb-6 md:py-6'>
+                        <ul className='filmsList flex flex-col p-4 focus:outline-none'>
+                            {Object.entries(group).map((item) => {
+                                const [id, sessions] = item
+                                const { name, poster } = moviesGroups[id]
+                                return (
+                                    <li
+                                        key={id}
+                                        className='filmItem flex flex-col md:flex-row p-4 my-4 bg-gray-300 overflow-hidden'
+                                    >
+                                        <div className='w-48 flex-shrink-0 self-center md:self-auto'>
+                                            <img
+                                                src={poster}
+                                                className='w-48 h-64'
+                                            />
+                                        </div>
+                                        <div className='flex-col p-2 m-2 flex-1'>
+                                            <a
+                                                href='./filmPage.html'
+                                                className='filmName text-blue-500 text-2xl hover:underline'
+                                            >
+                                                {name}
+                                            </a>
+                                            <Sessions data={sessions} />
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        )
+    }
 }
 
 export { MovieSessions }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { MoviePoster } from './MoviePoster'
-import { CinemaShowRespose } from '../shared/types'
+import { CinemaShowRelationType } from '../shared/types'
 
 function TodayTimetable() {
-    const fetchMovies = (): Promise<CinemaShowRespose[]> =>
+    const fetchMovies = (): Promise<CinemaShowRelationType[]> =>
         fetch(`${process.env.API_URL}/cinemaShows`).then((response) =>
             response.json()
         )

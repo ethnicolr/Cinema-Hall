@@ -1,16 +1,13 @@
 import React from 'react'
-import { Movie } from '../shared/types'
+import { MovieType } from '../shared/types'
 
 interface Props {
-    data: Movie
+    data: MovieType
 }
 
 export default function MovieDetails({ data }: Props) {
     const {
-        name,
         poster,
-        preview,
-        description,
         imdbRating,
         yearOfCreation,
         country,

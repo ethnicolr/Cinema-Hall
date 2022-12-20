@@ -1,9 +1,9 @@
-import { CinemaShow } from 'src/cinema.show/cinema.show.entity';
-import { UserEntity } from 'src/users/users.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { CinemaShowEntity } from 'src/cinema.show/cinema.show.entity';
+import { UserEntity } from 'src/users/users.entity';
 
 @Entity()
-export class Ticket {
+export class TicketsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,8 +13,8 @@ export class Ticket {
   @Column()
   chair: number;
 
-  @ManyToOne(() => CinemaShow, (cinemaShows) => cinemaShows.tickets)
-  cinemaShow: CinemaShow;
+  @ManyToOne(() => CinemaShowEntity, (cinemaShows) => cinemaShows.tickets)
+  cinemaShow: CinemaShowEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.tickets)
   user: UserEntity;

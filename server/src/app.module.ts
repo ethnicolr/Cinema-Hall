@@ -9,6 +9,7 @@ import { CinemaShowModule } from './cinema.show/cinema.show.module';
 import { MovieService } from './movie/movie.service';
 import { ModuleService } from './module/module.service';
 import { MovieModule } from './movie/movie.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MovieModule } from './movie/movie.module';
     DatabaseModule,
     CinemaShowModule,
     MovieModule,
+    TicketsModule,
   ],
   controllers: [AuthController],
   providers: [AppService, CinemaShowService, MovieService, ModuleService],

@@ -1,15 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from 'src/users/users.entity';
 import { Between, Raw, Repository } from 'typeorm';
-import { CinemaShow } from './cinema.show.entity';
+import { CinemaShowEntity } from './cinema.show.entity';
+// import { BuyTicketDto } from './dto/cinema.buy.tickets.dto';
 import { CinemaQueryParamDto } from './dto/cinema.query.params.dto';
 
 @Injectable()
 export class CinemaShowService {
   constructor(
-    @InjectRepository(CinemaShow)
-    private readonly cinemaShowRepo: Repository<CinemaShow>,
+    @InjectRepository(CinemaShowEntity)
+    private readonly cinemaShowRepo: Repository<CinemaShowEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
   ) {}
+
+  async findOne(id: string | number) {
+    const cinemaShow = await this.cinemaShowRepo.findOne({
+      where: { id: Number(id) },
+      relations: ['hall', 'hall.seatBlocks'],
+    });
+    if (!cinemaShow) {
+      throw new HttpException('Cinema show not fount', HttpStatus.NOT_FOUND);
+    }
+    return cinemaShow;
+  }
 
   async filtetCinemaShow(filter: CinemaQueryParamDto) {
     const where = {};
@@ -53,4 +68,13 @@ export class CinemaShowService {
     });
     return shows;
   }
+
+  // async butTickets(buyTicketsDto: BuyTicketDto) {
+  //   const { userId, cinemaShowId, tickets } = buyTicketsDto;
+
+  //   const user = await this.userRepo.findOne({ where: { id: userId } });
+  //   const cinemaShow = await this.cinemaShowRepo.findOne({
+  //     where: { id: cinemaShowId },
+  //   });
+  // }
 }

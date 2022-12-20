@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Movie } from './movie.entity';
+import { MovieEntity } from './movie.entity';
 
 @Injectable()
 export class MovieService {
   constructor(
-    @InjectRepository(Movie)
-    private readonly movieRepo: Repository<Movie>,
+    @InjectRepository(MovieEntity)
+    private readonly movieRepo: Repository<MovieEntity>,
   ) {}
 
   async findOne(id: string) {

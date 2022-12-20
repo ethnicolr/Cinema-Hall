@@ -5,12 +5,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { MovieEntity } from 'src/movie/movie.entity';
+import { TicketsEntity } from 'src/tickets/tickets.entity';
 import { Hall } from 'src/cinema.hall/cinema.hall.entity';
-import { Movie } from 'src/movie/movie.entity';
-import { Ticket } from 'src/ticket/ticket.entity';
 
 @Entity()
-export class CinemaShow {
+export class CinemaShowEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,12 +26,12 @@ export class CinemaShow {
   @Column({ type: 'timestamp' })
   startTime: string;
 
-  @ManyToOne(() => Movie, (movie) => movie.cinemaShows)
-  movie: Movie;
+  @ManyToOne(() => MovieEntity, (movie) => movie.cinemaShows)
+  movie: MovieEntity;
 
   @ManyToOne(() => Hall, (hall) => hall.cinemaShows)
   hall: Hall;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.cinemaShow)
-  tickets: Ticket[];
+  @OneToMany(() => TicketsEntity, (ticket) => ticket.cinemaShow)
+  tickets: TicketsEntity[];
 }

@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CinemaShowController } from './cinema.show.controller';
-import { CinemaShow } from './cinema.show.entity';
+import { Module } from '@nestjs/common';
+import { UserEntity } from 'src/users/users.entity';
+import { CinemaShowEntity } from './cinema.show.entity';
 import { CinemaShowService } from './cinema.show.service';
+import { CinemaShowController } from './cinema.show.controller';
+// import { TicketsEntity } from 'src/tickets/tickets.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CinemaShow])],
+  imports: [TypeOrmModule.forFeature([CinemaShowEntity, UserEntity])],
   controllers: [CinemaShowController],
   providers: [CinemaShowService],
   exports: [TypeOrmModule],

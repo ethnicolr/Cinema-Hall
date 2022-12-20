@@ -1,5 +1,5 @@
+import { CinemaShowEntity } from 'src/cinema.show/cinema.show.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CinemaShow } from 'src/cinema.show/cinema.show.entity';
 import { SeatBlock } from './seat.block.entity';
 
 @Entity()
@@ -19,6 +19,6 @@ export class Hall {
   @OneToMany(() => SeatBlock, (block) => block.hall)
   seatBlocks: [];
 
-  @OneToMany(() => CinemaShow, (cinema) => cinema.hall)
-  cinemaShows: CinemaShow[];
+  @OneToMany(() => CinemaShowEntity, (cinema) => cinema.hall)
+  cinemaShows: CinemaShowEntity[];
 }

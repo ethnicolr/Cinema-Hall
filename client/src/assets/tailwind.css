@@ -827,3 +827,24 @@ input:invalid {
 .bg-transparentBlack {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+.seat {
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #14a8e1;
+    border-radius: 20%;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background-color: #ffd600;
+}
+
+.seat.unavailable {
+    cursor: not-allowed;
+    background-color: transparent;
+    color: gray;
+}

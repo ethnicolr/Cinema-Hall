@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 interface Props {
     children: React.ReactNode
@@ -9,6 +9,8 @@ interface ModalContextInterface {
     singUpOpen: boolean
     restorePasswordOpen: boolean
     resetPasswordOpen: boolean
+    textModal: null | string
+    setTextModal: React.Dispatch<React.SetStateAction<string | null>>
     setLoginOpen: React.Dispatch<React.SetStateAction<boolean>>
     setSingUpOpen: React.Dispatch<React.SetStateAction<boolean>>
     setRestorePasswordOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -24,6 +26,11 @@ function ModalProvider({ children }: Props) {
     const [singUpOpen, setSingUpOpen] = useState(false)
     const [restorePasswordOpen, setRestorePasswordOpen] = useState(false)
     const [resetPasswordOpen, setResetPasswordOpen] = useState(false)
+    const [textModal, setTextModal] = useState<null | string>(null)
+
+    useEffect(() => {
+        if (textModal && !loginOpen) setTextModal(null)
+    }, [textModal, loginOpen])
 
     const value = {
         loginOpen,
@@ -34,6 +41,8 @@ function ModalProvider({ children }: Props) {
         setRestorePasswordOpen,
         resetPasswordOpen,
         setResetPasswordOpen,
+        setTextModal,
+        textModal,
     }
 
     return (

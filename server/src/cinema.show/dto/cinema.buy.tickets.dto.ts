@@ -1,12 +1,12 @@
-// class BuyTicketDto {
-//   cinemaShowId: number;
-//   tickets: TicketDto[];
-//   userId: number;
-// }
+class BuyTicketDto {
+  cinemaShowId: number;
+  tickets: TicketDto[];
+  userId: number;
+}
 
-// interface TicketDto {
-//   row: number;
-//   chair: number;
-// }
+interface TicketDto {
+  row: number;
+  chair: number;
+}
 
-// export { BuyTicketDto, TicketDto };
+export { BuyTicketDto, TicketDto };

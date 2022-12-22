@@ -18,6 +18,7 @@ export class CinemaShowController {
 
   @Get()
   async getCinemaShows(@Query() params: CinemaQueryParamDto) {
+    console.log('get');
     return await this.cinemaService.filtetCinemaShow(params);
   }
 
@@ -34,6 +35,10 @@ export class CinemaShowController {
     @Body() tickets: { chair: number; row: number }[],
   ) {
     const { userId } = req.user;
-    console.log(req.user);
+    return await this.cinemaService.butTickets({
+      userId,
+      tickets,
+      cinemaShowId: params.id,
+    });
   }
 }

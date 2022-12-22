@@ -29,6 +29,11 @@ interface CinemaShowRelationType extends CinemaShowType {
     movie: MovieType
 }
 
+interface TicketsUserType extends CinemaShowType {
+    movie: MovieType
+    tickets: TicketType[]
+}
+
 interface MovieRelationType extends MovieType {
     cinemaShows: CinemaShowType[]
 }
@@ -37,6 +42,35 @@ type FormatType = Record<string, CinemaShowType[]>
 type SessionsType = Record<string, FormatType>
 type MovieShowsType = Record<string, SessionsType>
 
+interface HallConfigType {
+    id: number
+    width: number
+    height: number
+    seatWidth: number
+    seatBlocks: SeatBlockType[]
+}
+
+interface SeatBlockType {
+    id: number
+    x: number
+    y: number
+    width: number
+    height: number
+    seats: number
+    rows: number
+}
+
+interface TicketType {
+    id?: number
+    row: number
+    chair: number
+}
+
+interface CinemaShowWithHallType extends CinemaShowType {
+    tickets: TicketType[]
+    hall: HallConfigType
+}
+
 export {
     CinemaShowType,
     MovieType,
@@ -44,4 +78,9 @@ export {
     MovieRelationType,
     SessionsType,
     MovieShowsType,
+    HallConfigType,
+    SeatBlockType,
+    CinemaShowWithHallType,
+    TicketType,
+    TicketsUserType,
 }

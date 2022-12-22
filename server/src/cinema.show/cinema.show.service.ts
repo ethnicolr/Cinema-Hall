@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/users.entity';
 import { Between, Raw, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CinemaShowEntity } from './cinema.show.entity';
-// import { BuyTicketDto } from './dto/cinema.buy.tickets.dto';
+import { UserEntity } from 'src/users/users.entity';
 import { CinemaQueryParamDto } from './dto/cinema.query.params.dto';
+import { BuyTicketDto } from './dto/cinema.buy.tickets.dto';
+import { TicketsEntity } from 'src/tickets/tickets.entity';
 
 @Injectable()
 export class CinemaShowService {
@@ -13,12 +14,14 @@ export class CinemaShowService {
     private readonly cinemaShowRepo: Repository<CinemaShowEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(TicketsEntity)
+    private readonly ticketsRepo: Repository<TicketsEntity>,
   ) {}
 
   async findOne(id: string | number) {
     const cinemaShow = await this.cinemaShowRepo.findOne({
       where: { id: Number(id) },
-      relations: ['hall', 'hall.seatBlocks'],
+      relations: ['hall', 'hall.seatBlocks', 'tickets'],
     });
     if (!cinemaShow) {
       throw new HttpException('Cinema show not fount', HttpStatus.NOT_FOUND);
@@ -61,7 +64,6 @@ export class CinemaShowService {
         where['startTime'] = Between(from.toISOString(), to.toISOString());
       }
     });
-
     const shows = await this.cinemaShowRepo.find({
       relations: ['movie'],
       where,
@@ -69,12 +71,32 @@ export class CinemaShowService {
     return shows;
   }
 
-  // async butTickets(buyTicketsDto: BuyTicketDto) {
-  //   const { userId, cinemaShowId, tickets } = buyTicketsDto;
+  async butTickets(buyTicketsDto: BuyTicketDto) {
+    const { userId, cinemaShowId, tickets } = buyTicketsDto;
 
-  //   const user = await this.userRepo.findOne({ where: { id: userId } });
-  //   const cinemaShow = await this.cinemaShowRepo.findOne({
-  //     where: { id: cinemaShowId },
-  //   });
-  // }
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    const cinemaShow = await this.cinemaShowRepo.findOne({
+      where: { id: cinemaShowId },
+    });
+
+    const isSold = await this.ticketsRepo.findOne({
+      relations: { cinemaShow: true },
+      where: tickets.reduce((acc, ticket) => {
+        const { row, chair } = ticket;
+        acc.push({ cinemaShow, row, chair });
+        return acc;
+      }, []),
+    });
+
+    if (isSold) {
+      return { success: false, message: 'Билеты уже куплены' };
+    }
+
+    const newTickets = tickets.map((ticket) =>
+      this.ticketsRepo.create({ ...ticket, user, cinemaShow }),
+    );
+    this.ticketsRepo.save(newTickets);
+
+    return { success: true, message: 'Билеты куплены' };
+  }
 }

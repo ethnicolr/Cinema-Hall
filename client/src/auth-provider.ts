@@ -48,6 +48,16 @@ function client(endpoint: string, { data }: Request = {}) {
     })
 }
 
+const parseJson = async (response: Response) => {
+    const text = await response.text()
+    try {
+        const json = JSON.parse(text)
+        return json
+    } catch (err) {
+        return text
+    }
+}
+
 function handleUserResponse(user: UserResponse) {
     window.localStorage.setItem(localStorageKey, user.access_token!)
     return user

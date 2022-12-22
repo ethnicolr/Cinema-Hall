@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { SuccessBunner } from './SuccessBunner'
 
@@ -11,12 +12,13 @@ function Authenticated() {
         e.preventDefault()
         logout()
     }
+
     return (
         <>
             <div className='user authorized flex items-center '>
-                <a title='' href='./cabinet.html'>
+                <Link to='./cabinet'>
                     <img src='assets/img/user-icon.svg' className='w-10' />
-                </a>
+                </Link>
                 <a
                     href='/logout'
                     className='w-8 ml-2 focus:outline-none'

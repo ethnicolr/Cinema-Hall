@@ -8,6 +8,8 @@ import { Footer } from './components/Footer'
 import { Main } from './screens/main'
 import { MoviePage } from './screens/moviePage'
 import { Timetable } from './screens/timetable'
+import { BuyTickets } from './screens/buy-tickets'
+import { Cabinet } from './screens/cabinet'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +31,11 @@ export default function App() {
                                     path='/timetable'
                                     element={<Timetable />}
                                 />
+                                <Route
+                                    path='/buy-tickets/:id'
+                                    element={<BuyTickets />}
+                                />
+                                <Route path='/cabinet' element={<Cabinet />} />
                             </Routes>
 
                             <Footer />

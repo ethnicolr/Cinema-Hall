@@ -24,7 +24,6 @@ function ModalWrapper({
         const element = (e.target as HTMLElement).tagName
         if (element === 'SUMMARY' || element === 'svg') {
             e.preventDefault()
-            console.log('click')
             toggleModal((open) => !open)
         }
     }

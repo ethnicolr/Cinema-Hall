@@ -21,12 +21,13 @@ const stateScheme = {
 
 function LoginModal() {
     const { login } = useAuth()
-    const { loginOpen, setLoginOpen, setResetPasswordOpen } = useModal()
+    const { loginOpen, setLoginOpen, setResetPasswordOpen, textModal } =
+        useModal()
 
     const handleSubmit = async (
         values: Record<keyof typeof stateScheme, string>
     ) => {
-        const response = login(values)
+        const response = await login(values)
         if (typeof response !== 'string') {
             setLoginOpen(false)
         }
@@ -37,8 +38,8 @@ function LoginModal() {
         e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
     ) => {
         e.preventDefault()
-        setResetPasswordOpen(true)
-        setLoginOpen(false)
+        // setResetPasswordOpen(true)
+        // setLoginOpen(false)
     }
 
     return (
@@ -57,7 +58,7 @@ function LoginModal() {
                         />
                     </a>
                     <h2 className='mt-6 text-center text-base md:text-2xl leading-9 font-extrabold text-gray-900'>
-                        Вход в аккаунт
+                        {textModal || 'Вход в аккаунт'}
                     </h2>
                     <a
                         role='button'

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { SessionsType } from '../shared/types'
 import { getdhm } from '../utils'
 
@@ -24,19 +25,25 @@ function Sessions({ data }: Props) {
                                                 {type}
                                             </h6>
                                             <div className='flex flex-wrap'>
-                                                {data[day][type].map((time) => {
-                                                    const { hour, minute } =
-                                                        getdhm(time.startTime)
-
-                                                    return (
-                                                        <a
-                                                            className='movieTimeLink notActive'
-                                                            key={time.id}
-                                                        >
-                                                            {`${hour}:${minute}`}
-                                                        </a>
-                                                    )
-                                                })}
+                                                {data[day][type].map(
+                                                    (cinemaShow) => {
+                                                        const {
+                                                            id,
+                                                            startTime,
+                                                        } = cinemaShow
+                                                        const { hour, minute } =
+                                                            getdhm(startTime)
+                                                        return (
+                                                            <Link
+                                                                className='movieTimeLink'
+                                                                key={id}
+                                                                to={`/buy-tickets/${id}`}
+                                                            >
+                                                                {`${hour}:${minute}`}
+                                                            </Link>
+                                                        )
+                                                    }
+                                                )}
                                             </div>
                                         </li>
                                     )

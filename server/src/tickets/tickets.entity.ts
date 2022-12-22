@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { CinemaShowEntity } from 'src/cinema.show/cinema.show.entity';
 import { UserEntity } from 'src/users/users.entity';
 
@@ -13,9 +19,10 @@ export class TicketsEntity {
   @Column()
   chair: number;
 
-  @ManyToOne(() => CinemaShowEntity, (cinemaShows) => cinemaShows.tickets)
+  @ManyToOne(() => CinemaShowEntity, (cinemaShow) => cinemaShow.tickets)
   cinemaShow: CinemaShowEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.tickets)
+  @JoinColumn()
   user: UserEntity;
 }

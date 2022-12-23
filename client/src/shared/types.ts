@@ -62,8 +62,8 @@ interface SeatBlockType {
 
 interface TicketType {
     id?: number
-    row: number
-    chair: number
+    row: number | string
+    chair: number | string
 }
 
 interface CinemaShowWithHallType extends CinemaShowType {

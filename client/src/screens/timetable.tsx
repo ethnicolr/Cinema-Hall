@@ -1,18 +1,23 @@
-import React from 'react'
-import { client } from '../auth-provider'
-import { useAsync } from '../hooks/useAsync'
+import React, { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getCinemaShows } from '../api'
 import { CinemaShowRelationType } from '../shared/types'
 import { MovieSessions } from '../components/MovieSessions'
 import { Filter } from '../components/Filter'
+import { Spinner } from '../components/Spinner'
 
 function Timetable() {
-    const { data, run } = useAsync<CinemaShowRelationType[]>()
+    const [params, setParams] = useState<string>()
+    const {
+        data: shows,
+        isLoading,
+        isSuccess,
+    } = useQuery<CinemaShowRelationType[]>(
+        ['shows', params],
+        async () => await getCinemaShows(params)
+    )
 
-    const fetchCinemaShows = (params: string) => {
-        return client(`cinemaShows?${params}`)
-    }
-
-    const onSubmitFilter = (params: string) => run(fetchCinemaShows(params))
+    const onSubmitFilter = (params: string) => setParams(params)
 
     return (
         <main className='mt-20 overflow-y-auto'>
@@ -21,7 +26,9 @@ function Timetable() {
             </h1>
             <div className='flex bg-white flex-col md:flex-row'>
                 <Filter onSubmit={onSubmitFilter} />
-                <MovieSessions data={data} />
+
+                {isSuccess && <MovieSessions data={shows} />}
+                {isLoading && <Spinner />}
             </div>
         </main>
     )

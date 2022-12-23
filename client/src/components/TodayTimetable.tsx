@@ -1,14 +1,10 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { MoviePoster } from './MoviePoster'
-import { CinemaShowRelationType } from '../shared/types'
+import { getCinemaShows } from '../api'
 
 function TodayTimetable() {
-    const fetchMovies = (): Promise<CinemaShowRelationType[]> =>
-        fetch(`${process.env.API_URL}/cinemaShows`).then((response) =>
-            response.json()
-        )
-    const { data, isSuccess } = useQuery(['movies'], fetchMovies)
+    const { data, isSuccess } = useQuery(['shows'], () => getCinemaShows())
     return (
         <section className='todayTimetable container mx-auto'>
             <h1 className='text-center md:text-left text-4xl md:pl-12 pt-8'>

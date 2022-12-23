@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 interface Props {
-    onSubmit: (searchParams: string) => any
+    onSubmit: (searchParams: string) => void
 }
 
 function Filter({ onSubmit }: Props) {
@@ -37,9 +37,8 @@ function Filter({ onSubmit }: Props) {
         if (format.length) paramsObj['format'] = format.join(',')
         if (technology.length) paramsObj['technology'] = technology.join(',')
 
-        const serachParams = new URLSearchParams(paramsObj)
-
-        onSubmit(serachParams.toString())
+        const serachParams = new URLSearchParams(paramsObj).toString()
+        onSubmit(serachParams)
     }, [date, type])
 
     return (
